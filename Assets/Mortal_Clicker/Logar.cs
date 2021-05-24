@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-
+using UnityEngine.SceneManagement;
 public class Logar : MonoBehaviour
 {
     public InputField infLogin;
     public InputField infSenha;
 
+    private void Start()
+    {
+        //Debug.Log(PlayerPrefs.GetString("login"));
+    }
     public void FazerLogin()
     {
         StartCoroutine(verificarLogin(infLogin.text, infSenha.text));
     }
 
-    private void LoginDeuCerto()
+    private void LoginDeuCerto(string Login)
     {
-        Debug.Log("aaeeee");
+        PlayerPrefs.SetString("Login", Login);
+        SceneManager.LoadScene("Jogo");
     }
     private void LoginDeuRuim()
     {
@@ -40,7 +45,7 @@ public class Logar : MonoBehaviour
         {
             if (w.downloadHandler.text.Equals("Ok"))
             {
-                LoginDeuCerto();
+                LoginDeuCerto(Login);
             }
             else
             {

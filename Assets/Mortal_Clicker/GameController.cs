@@ -11,6 +11,14 @@ public class GameController : MonoBehaviour
 
     public Button SoVai;
     public Button Desistir;
+    private void Start()
+    {
+        string Login = PlayerPrefs.GetString("Login", string.Empty);
+        if (!Login.Equals(string.Empty)) 
+        {
+            txtMsg.text = "Olá " + Login;
+        }
+    }
     public void BtnVai()
     {
         if(Random.Range(1f, 20f) < 19)
