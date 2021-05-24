@@ -11,12 +11,17 @@ public class GameController : MonoBehaviour
 
     public Button SoVai;
     public Button Desistir;
+
+    private string Login;
+    private string Nome;
     private void Start()
     {
-        string Login = PlayerPrefs.GetString("Login", string.Empty);
+        Login = PlayerPrefs.GetString("Login", string.Empty);
+        Nome = PlayerPrefs.GetString("Nome", string.Empty);
+
         if (!Login.Equals(string.Empty)) 
         {
-            txtMsg.text = "Olá " + Login;
+            txtMsg.text = "Olá " + Nome + " (" + Login + ")";
         }
     }
     public void BtnVai()
@@ -61,7 +66,7 @@ public class GameController : MonoBehaviour
     IEnumerator AdicionarPontuacao()
     {
         WWWForm wwwf = new WWWForm();
-        wwwf.AddField("jogador", "ABC");
+        wwwf.AddField("jogador", Login);
         wwwf.AddField("pontos", pontos);
 
         UnityWebRequest w = UnityWebRequest.Post("http://localhost/mortal_clicker/inserirPontucao.php", wwwf);

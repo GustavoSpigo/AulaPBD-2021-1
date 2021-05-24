@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InserirJogador : MonoBehaviour
@@ -19,6 +20,7 @@ public class InserirJogador : MonoBehaviour
     public Text txtMsg;
     public bool ValidarCamposJogador()
     {
+        txtMsg.text = string.Empty;
         if (!infLogin.text.Length.Equals(3))
         {
             txtMsg.text = "O login precisa ter 3 caracteres";
@@ -59,14 +61,18 @@ public class InserirJogador : MonoBehaviour
         wwwf.AddField("login", infLogin.text);
         wwwf.AddField("senha", infSenha.text);
         wwwf.AddField("nome", infNome.text);
-        wwwf.AddField("dt_nscimento", infDtNascimento.text);
+        wwwf.AddField("dt_nascimento", infDtNascimento.text);
         wwwf.AddField("genero", ddwGenero.options[ddwGenero.value].text) ;
         wwwf.AddField("nacionalidade", infNacionalidade.text);
         wwwf.AddField("preferencia", ddwPreferencia.options[ddwPreferencia.value].text);
 
         UnityWebRequest w = UnityWebRequest.Post("http://localhost/mortal_clicker/inserirJogador.php", wwwf);
 
+        infLogin.enabled = false;
+
         yield return w.SendWebRequest();
+
+        infLogin.enabled = true;
 
         if (w.isHttpError || w.isNetworkError)
         {
@@ -75,6 +81,23 @@ public class InserirJogador : MonoBehaviour
         else
         {
             Debug.Log(w.downloadHandler.text);
+            if(w.downloadHandler.text.Equals("gatoNao"))
+            {
+                txtMsg.text = "Esse jogo não aceita preferência por gatos";
+            }
+
+            if (w.downloadHandler.text.Equals("LoginExiste"))
+            {
+                txtMsg.text = "Esse login já existe, escolha outro";
+            }
+
+            if (w.downloadHandler.text.Equals("DeuBom"))
+            {
+                txtMsg.text = "Que deliciaaaa cara, deu bom";
+                PlayerPrefs.SetString("Login", infLogin.text);
+                PlayerPrefs.SetString("Nome", infNome.text);
+                SceneManager.LoadScene("Jogo");
+            }
         }
     }
 }
